@@ -1,4 +1,5 @@
 model,acc@1,acc@5,param_count,img_size,crop_pct,interpolation,engine
+efficientnet_b5,0.83859,0.96781,30562520,456,1.0,bicubic,pil
 efficientnet_b4,0.83749,0.96613,19466816,380,0.9896,bicubic,pil
 efficientnet_b3,0.82368,0.96157,12320528,300,0.9375,bicubic,pil
 efficientnet_b2,0.80762,0.9525,9177562,288,1.0,bicubic,pil

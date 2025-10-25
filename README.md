@@ -55,3 +55,16 @@ PYTHONPATH=mlx-image/src uv run python mlx-image/validation.py --config val_conf
 PYTHONPATH=mlx-image/src uv run python mlx-image/validation.py --config val_config/validation_efficientnet_b6.yaml
 PYTHONPATH=mlx-image/src uv run python mlx-image/validation.py --config val_config/validation_efficientnet_b7.yaml
 ```
+
+## Upload to HuggingFace
+
+```bash
+cd output/efficientnet_b0-mlxim && hf upload mlx-vision/efficientnet_b0-mlxim .
+cd output/efficientnet_b1-mlxim && hf upload mlx-vision/efficientnet_b1-mlxim .
+cd output/efficientnet_b2-mlxim && hf upload mlx-vision/efficientnet_b2-mlxim .
+cd output/efficientnet_b3-mlxim && hf upload mlx-vision/efficientnet_b3-mlxim .
+cd output/efficientnet_b4-mlxim && hf upload mlx-vision/efficientnet_b4-mlxim .
+cd output/efficientnet_b5-mlxim && hf upload mlx-vision/efficientnet_b5-mlxim .
+cd output/efficientnet_b6-mlxim && hf upload mlx-vision/efficientnet_b6-mlxim .
+cd output/efficientnet_b7-mlxim && hf upload mlx-vision/efficientnet_b7-mlxim .
+```
