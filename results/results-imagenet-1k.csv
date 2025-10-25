@@ -1,0 +1,2 @@
+model,acc@1,acc@5,param_count,img_size,crop_pct,interpolation,engine
+efficientnet_b0,0.77943,0.93702,5330564,224,0.875,bicubic,pil
