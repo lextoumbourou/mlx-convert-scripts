@@ -29,3 +29,29 @@ Download the validation datasets:
 # Download the ImageNet-1k dataset to datasets directory
 uv run huggingface-cli download mlx-vision/imagenet-1k --repo-type dataset --local-dir datasets/imagenet-1k
 ```
+
+## Convert EfficientNet weights
+
+```bash
+uv run scripts/convert_efficientnet_weights.py --model efficientnet_b0 --download
+uv run scripts/convert_efficientnet_weights.py --model efficientnet_b1 --download
+uv run scripts/convert_efficientnet_weights.py --model efficientnet_b2 --download
+uv run scripts/convert_efficientnet_weights.py --model efficientnet_b3 --download
+uv run scripts/convert_efficientnet_weights.py --model efficientnet_b4 --download
+uv run scripts/convert_efficientnet_weights.py --model efficientnet_b5 --download
+uv run scripts/convert_efficientnet_weights.py --model efficientnet_b6 --download
+uv run scripts/convert_efficientnet_weights.py --model efficientnet_b7 --download
+```
+
+## Test EfficientNet models
+
+```bash
+PYTHONPATH=mlx-image/src uv run python mlx-image/validation.py --config val_config/validation_efficientnet_b0.yaml
+PYTHONPATH=mlx-image/src uv run python mlx-image/validation.py --config val_config/validation_efficientnet_b1.yaml
+PYTHONPATH=mlx-image/src uv run python mlx-image/validation.py --config val_config/validation_efficientnet_b2.yaml
+PYTHONPATH=mlx-image/src uv run python mlx-image/validation.py --config val_config/validation_efficientnet_b3.yaml
+PYTHONPATH=mlx-image/src uv run python mlx-image/validation.py --config val_config/validation_efficientnet_b4.yaml
+PYTHONPATH=mlx-image/src uv run python mlx-image/validation.py --config val_config/validation_efficientnet_b5.yaml
+PYTHONPATH=mlx-image/src uv run python mlx-image/validation.py --config val_config/validation_efficientnet_b6.yaml
+PYTHONPATH=mlx-image/src uv run python mlx-image/validation.py --config val_config/validation_efficientnet_b7.yaml
+```

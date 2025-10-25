@@ -15,7 +15,7 @@ import numpy as np
 # Add src to path
 sys.path.insert(0, str(Path(__file__).parent.parent / "mlx-image/src"))
 
-from mlxim.model.efficientnet._factory import efficientnet_b0, efficientnet_b1
+from mlxim.model.efficientnet._factory import efficientnet_b0, efficientnet_b1, efficientnet_b2, efficientnet_b3, efficientnet_b4, efficientnet_b5, efficientnet_b6, efficientnet_b7
 
 
 def load_pytorch_weights(model, weights_path: Union[str, Path]) -> None:
@@ -149,9 +149,11 @@ datasets:
 ---
 # {model_name}
 
-An {model_name.replace('_', '-').upper()} image classification model. Pretrained on ImageNet-1K.
+An {model_name.replace('_', ' ').upper().replace('EFFICIENTNET', 'EfficientNet')} model architecture, pretrained on ImageNet-1K.
 
-Disclaimer: This is a port of the PyTorch model weights to Apple MLX Framework.
+Disclaimer: this is a port of the Torchvision model weights to Apple MLX Framework.
+
+See [mlx-convert-scripts](https://github.com/lextoumbourou/mlx-convert-scripts) repo for the conversion script used.
 
 ## How to use
 ```bash
@@ -277,6 +279,18 @@ def convert_pytorch_to_mlx(pytorch_weights_path: Path, output_path: Path, model_
         model = efficientnet_b0()
     elif model_name == "efficientnet_b1":
         model = efficientnet_b1()
+    elif model_name == "efficientnet_b2":
+        model = efficientnet_b2()
+    elif model_name == "efficientnet_b3":
+        model = efficientnet_b3()
+    elif model_name == "efficientnet_b4":
+        model = efficientnet_b4()
+    elif model_name == "efficientnet_b5":
+        model = efficientnet_b5()
+    elif model_name == "efficientnet_b6":
+        model = efficientnet_b6()
+    elif model_name == "efficientnet_b7":
+        model = efficientnet_b7()
     else:
         raise ValueError(f"Unsupported model: {model_name}")
 
