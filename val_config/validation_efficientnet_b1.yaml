@@ -1,0 +1,23 @@
+
+output: results                                         # output directory for the validation experiment
+apple_silicon: m1_pro                                   # apple silicon (m1, m1_pro, m1_max, m2_pro, etc.)
+
+dataset:                                                ###### dataset configuration ######
+  root_dir: datasets/imagenet-1k/val  # path to the dataset directory (folders with images)
+  class_map: datasets/imagenet-1k/class_map.json  # class map for the dataset
+  engine: pil                                           # image processing engine (pil or cv2)
+  verbose: false                                        # print dataset info
+
+
+model:                                                  ###### model configuration ######
+  model_name: efficientnet_b1                           # model name
+  weights: output/efficientnet_b1-mlxim/model.safetensors # path to MLX weights
+
+loader:                                                 ###### loader configuration ######
+  batch_size: 32                                        # batch size
+  num_workers: 8                                        # number of workers
+  shuffle: false                                        # shuffle the dataset
+  drop_last: false                                      # drop last batch
+
+metric:                                                 ###### metric configuration ######
+  top_k: [1, 5]                                         # which top-k accuracy to compute

@@ -11,6 +11,12 @@ git clone git@github.com:lextoumbourou/mlx-image.git
 git checkout lex-efficientnet-vision
 ```
 
+Clone `vision` for model comparisions:
+
+```bash
+git clone git@github.com:pytorch/vision.git
+```
+
 Setup uv
 
 ```

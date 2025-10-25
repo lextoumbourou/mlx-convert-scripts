@@ -15,7 +15,7 @@ import numpy as np
 # Add src to path
 sys.path.insert(0, str(Path(__file__).parent.parent / "mlx-image/src"))
 
-from mlxim.model.efficientnet._factory import efficientnet_b0
+from mlxim.model.efficientnet._factory import efficientnet_b0, efficientnet_b1
 
 
 def load_pytorch_weights(model, weights_path: Union[str, Path]) -> None:
@@ -127,6 +127,129 @@ def load_pytorch_weights(model, weights_path: Union[str, Path]) -> None:
     print(f"Successfully loaded PyTorch weights from {weights_path}")
 
 
+def generate_readme(model_name: str, output_dir: Path, img_size: int, weights_source: str = "rwightman") -> None:
+    """Generate README.md for the model.
+
+    Args:
+        model_name: Name of the model
+        output_dir: Directory to save README
+        img_size: Input image size for the model
+        weights_source: Source of the pretrained weights
+    """
+    readme_content = f"""---
+license: apache-2.0
+library_name: mlx-image
+tags:
+- mlx
+- mlx-image
+- vision
+- image-classification
+datasets:
+- imagenet-1k
+---
+# {model_name}
+
+An {model_name.replace('_', '-').upper()} image classification model. Pretrained on ImageNet-1K.
+
+Disclaimer: This is a port of the PyTorch model weights to Apple MLX Framework.
+
+## How to use
+```bash
+pip install mlx-image
+```
+
+Here is how to use this model for image classification:
+
+```python
+from mlxim.model import create_model
+from mlxim.io import read_rgb
+from mlxim.transform import ImageNetTransform
+
+transform = ImageNetTransform(train=False, img_size={img_size})
+x = transform(read_rgb("cat.png"))
+x = mx.expand_dims(x, 0)
+
+model = create_model("{model_name}")
+model.eval()
+
+logits = model(x)
+```
+
+You can also use the embeds from layer before head:
+```python
+from mlxim.model import create_model
+from mlxim.io import read_rgb
+from mlxim.transform import ImageNetTransform
+
+transform = ImageNetTransform(train=False, img_size={img_size})
+x = transform(read_rgb("cat.png"))
+x = mx.expand_dims(x, 0)
+
+# first option
+model = create_model("{model_name}", num_classes=0)
+model.eval()
+
+embeds = model(x)
+
+# second option
+model = create_model("{model_name}")
+model.eval()
+
+embeds = model.get_features(x)
+```
+"""
+    readme_path = output_dir / "README.md"
+    readme_path.write_text(readme_content)
+    print(f"✓ Generated README.md at {readme_path}")
+
+
+def generate_gitattributes(output_dir: Path) -> None:
+    """Generate .gitattributes for the model directory.
+
+    Args:
+        output_dir: Directory to save .gitattributes
+    """
+    gitattributes_content = """*.7z filter=lfs diff=lfs merge=lfs -text
+*.arrow filter=lfs diff=lfs merge=lfs -text
+*.bin filter=lfs diff=lfs merge=lfs -text
+*.bz2 filter=lfs diff=lfs merge=lfs -text
+*.ckpt filter=lfs diff=lfs merge=lfs -text
+*.ftz filter=lfs diff=lfs merge=lfs -text
+*.gz filter=lfs diff=lfs merge=lfs -text
+*.h5 filter=lfs diff=lfs merge=lfs -text
+*.joblib filter=lfs diff=lfs merge=lfs -text
+*.lfs.* filter=lfs diff=lfs merge=lfs -text
+*.mlmodel filter=lfs diff=lfs merge=lfs -text
+*.model filter=lfs diff=lfs merge=lfs -text
+*.msgpack filter=lfs diff=lfs merge=lfs -text
+*.npy filter=lfs diff=lfs merge=lfs -text
+*.npz filter=lfs diff=lfs merge=lfs -text
+*.onnx filter=lfs diff=lfs merge=lfs -text
+*.ot filter=lfs diff=lfs merge=lfs -text
+*.parquet filter=lfs diff=lfs merge=lfs -text
+*.pb filter=lfs diff=lfs merge=lfs -text
+*.pickle filter=lfs diff=lfs merge=lfs -text
+*.pkl filter=lfs diff=lfs merge=lfs -text
+*.pt filter=lfs diff=lfs merge=lfs -text
+*.pth filter=lfs diff=lfs merge=lfs -text
+*.rar filter=lfs diff=lfs merge=lfs -text
+*.safetensors filter=lfs diff=lfs merge=lfs -text
+saved_model/**/* filter=lfs diff=lfs merge=lfs -text
+*.tar.* filter=lfs diff=lfs merge=lfs -text
+*.tar filter=lfs diff=lfs merge=lfs -text
+*.tflite filter=lfs diff=lfs merge=lfs -text
+*.tgz filter=lfs diff=lfs merge=lfs -text
+*.wasm filter=lfs diff=lfs merge=lfs -text
+*.xz filter=lfs diff=lfs merge=lfs -text
+*.zip filter=lfs diff=lfs merge=lfs -text
+*.zst filter=lfs diff=lfs merge=lfs -text
+*tfevents* filter=lfs diff=lfs merge=lfs -text
+"""
+    gitattributes_path = output_dir / ".gitattributes"
+    gitattributes_path.write_text(gitattributes_content)
+    print(f"✓ Generated .gitattributes at {gitattributes_path}")
+
+
 def convert_pytorch_to_mlx(pytorch_weights_path: Path, output_path: Path, model_name: str = "efficientnet_b0"):
     """Convert PyTorch EfficientNet weights to MLX format.
 
@@ -137,9 +260,23 @@ def convert_pytorch_to_mlx(pytorch_weights_path: Path, output_path: Path, model_
     """
     print(f"Creating MLX {model_name} model...")
 
+    # Model-specific configurations
+    model_configs = {
+        "efficientnet_b0": {"img_size": 224, "weights_source": "rwightman"},
+        "efficientnet_b1": {"img_size": 240, "weights_source": "torchvision"},
+        "efficientnet_b2": {"img_size": 288, "weights_source": "rwightman"},
+        "efficientnet_b3": {"img_size": 300, "weights_source": "rwightman"},
+        "efficientnet_b4": {"img_size": 380, "weights_source": "rwightman"},
+        "efficientnet_b5": {"img_size": 456, "weights_source": "lukemelas"},
+        "efficientnet_b6": {"img_size": 528, "weights_source": "lukemelas"},
+        "efficientnet_b7": {"img_size": 600, "weights_source": "lukemelas"},
+    }
+
     # Create MLX model
     if model_name == "efficientnet_b0":
         model = efficientnet_b0()
+    elif model_name == "efficientnet_b1":
+        model = efficientnet_b1()
     else:
         raise ValueError(f"Unsupported model: {model_name}")
 
@@ -159,6 +296,13 @@ def convert_pytorch_to_mlx(pytorch_weights_path: Path, output_path: Path, model_
     print(f"✓ Successfully saved MLX weights to {output_path}")
     print(f"  Saved {len(weights_dict)} weight tensors")
     print(f"  File size: {output_path.stat().st_size / 1024 / 1024:.2f} MB")
+
+    # Generate README.md
+    config = model_configs.get(model_name, {"img_size": 224, "weights_source": "torchvision"})
+    generate_readme(model_name, output_path.parent, config["img_size"], config["weights_source"])
+
+    # Generate .gitattributes
+    generate_gitattributes(output_path.parent)
 
 
 def download_pytorch_weights(model_name: str, weights_dir: Path) -> Path:
