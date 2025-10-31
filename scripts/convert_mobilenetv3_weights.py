@@ -15,7 +15,7 @@ import numpy as np
 # Add src to path
 sys.path.insert(0, str(Path(__file__).parent.parent / "mlx-image/src"))
 
-from mlxim.model.mobilenet.mobilenetv3 import mobilenet_v3_large, mobilenet_v3_small
+from mlxim.model.mobilenet._factory import mobilenet_v3_large, mobilenet_v3_small
 
 
 def load_pytorch_weights(model, weights_path: Union[str, Path]) -> None:
