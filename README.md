@@ -72,15 +72,15 @@ cd output/efficientnet_b7-mlxim && hf upload mlx-vision/efficientnet_b7-mlxim .
 ## Convert MobileNet weights
 
 ```bash
-uv run scripts/convert_mobilenet_weights.py
-uv run scripts/convert_mobilenet_v3_weights.py
+uv run scripts/convert_mobilenetv2_weights.py
+uv run scripts/convert_mobilenetv3_weights.py
 ```
 
 ## Validate MobileNet weights
 
 ```bash
-uv run scripts/scripts/validate_mobilenetv2.sh
-uv run scripts/scripts/validate_mobilenetv3.sh
+uv run scripts/validate_mobilenetv2.sh
+uv run scripts/validate_mobilenetv3.sh
 ```
 
 ## Upload to HuggingFace
